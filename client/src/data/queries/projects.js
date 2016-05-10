@@ -27,8 +27,12 @@ const projects = {
           return response.json();
         })
         .then(data => {
+          // clean out a couple of projects
           data.splice(data.findIndex(item => { 
             return item.name === 'reference-arch.github.io';
+          }), 1);
+          data.splice(data.findIndex(item => { 
+            return item.name === 'frege';
           }), 1);
           return items = data;
         })
