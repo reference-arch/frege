@@ -1,0 +1,26 @@
+{
+  "port": 3000,
+  "timeout": 1800000,
+  "destination": "file",
+  "s3": {
+    "accessKey": "",
+    "secretKey": "",
+    "bucket":    "gtm-preprod-data-services",
+    "file_base": "dev",
+    "region": "us-west-2"
+  },
+  "mongo": {
+    "host": "localhost",
+    "port": 27017,
+    "db":   "admin",
+    "user": "",
+    "pass": ""
+  },
+  "metrics": {
+    "host": "localhost",
+    "port": 2003,
+    "verbose": false,
+    "interval": 5000,
+    "type": "udp4"
+  }
+}
