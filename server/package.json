@@ -1,22 +1,17 @@
 {
-  "name": "account-team-golf-report",
+  "name": "frege",
   "private": true,
   "version": "1.0.0",
-  "description": "Generates a CSV report for Golf",
+  "description": "Manages ref arch list",
   "author": "Eric Redmond <eric.redmond@nike.com>",
   "dependencies": {
     "lodash": "^3.9.1",
     "co": "^4.5.4",
+    "co-body": "^4.2.0",
     "koa": "^0.20.0",
     "koa-path": "^1.0.0",
     "koa-mongo": "^0.5.0",
-    "csvrow": "^0.1.0",
-    "coffee-script": "^1.9.2",
-    "node-etcd": "^4.0.2",
-    "aws-sdk": "^2.1.47",
-    "bunyan": "^1.4.0",
-    "suspend": "^0.6.1",
-    "moment": "^2.1.10",
+    "bunyan": "^1.8.1",
     "promise": "^7.1.0"
   },
   "devDependencies": {

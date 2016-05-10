@@ -1,0 +1,8 @@
+{
+  "name": "Frege server",
+  "description": "Backend listing and management of ",
+  "repository": "https://github.com/reference-arch/frege",
+  "logo": "https://camo.githubusercontent.com/df1bd38fb7dc212f65af818d09dbd43524a4c260/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f392f39392f596f756e675f66726567652e6a7067",
+  "keywords": ["node", "reference", "architecture", "github"],
+  "image": "heroku/nodejs"
+}

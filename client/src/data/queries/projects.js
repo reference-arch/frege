@@ -1,10 +1,10 @@
 import { GraphQLList as List } from 'graphql';
 import fetch from '../../core/fetch';
 import ProjectItemType from '../types/ProjectItemType';
-import { githubToken } from '../../config';
+import { backendUrl } from '../../config';
 
 // GitHub
-const url = 'https://'+githubToken+':x-oauth-basic@api.github.com/user/repos';
+// const url = 'https://'+githubToken+':x-oauth-basic@api.github.com/user/repos';
 
 let items = [];
 let lastFetchTask;
@@ -19,7 +19,7 @@ const projects = {
 
     if ((new Date() - lastFetchTime) > 1000 * 15 /* 15 sec */) {
       lastFetchTime = new Date();
-      lastFetchTask = fetch(url)
+      lastFetchTask = fetch(backendUrl)
         .then(response => {
           if( response.status !== 200 ) {
             throw new Error('Unexpected response status '+ response.status)

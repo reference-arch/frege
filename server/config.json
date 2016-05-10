@@ -1,18 +1,11 @@
 {
-  "port": 3000,
-  "timeout": 1800000,
+  "port": 3100,
+  "timeout": 18000,
   "destination": "file",
-  "s3": {
-    "accessKey": "",
-    "secretKey": "",
-    "bucket":    "gtm-preprod-data-services",
-    "file_base": "dev",
-    "region": "us-west-2"
-  },
   "mongo": {
     "host": "localhost",
     "port": 27017,
-    "db":   "admin",
+    "db":   "RefArch",
     "user": "",
     "pass": ""
   },

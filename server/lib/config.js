@@ -34,7 +34,10 @@ if( !_.isUndefined(mongoConnect['user']) && mongoConnect['user'] !== '' ) {
 else {
   mongoUrl = 'mongodb://' + mongoHost + '/' + config.mongo.db;
 }
-mongoUrl += '?connectTimeoutMS=120000&socketTimeoutMS=120000&readPreference=primary';
+// mongoUrl += '?connectTimeoutMS=120000&socketTimeoutMS=120000&readPreference=primary';
+if( process.env.MONGODB_URI ) {
+  mongoUrl = process.env.MONGODB_URI;
+}
 mongoConnect['uri'] = mongoUrl;
 
 module.exports = config;
