@@ -21,10 +21,6 @@ function Footer() {
         <Link className={s.link} to="/">Home</Link>
         <span className={s.spacer}>·</span>
         <a href="https://github.com/reference-arch" className={s.link}>GitHub</a>
-        {/*
-        <span className={s.spacer}>·</span>
-        <Link className={s.link} to="/not-found">Not Found</Link>
-        */}
       </div>
     </div>
   );

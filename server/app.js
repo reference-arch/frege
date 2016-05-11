@@ -37,7 +37,7 @@ function saveProject(self) {
         let project = {
           _id: id,
           name: data['name'],
-          url_html: data['url_html'],
+          html_url: data['html_url'],
           description: data['description'],
           tags: data['tags']
         }
@@ -62,10 +62,10 @@ function saveProject(self) {
 
 function deleteProject(self, id) {
   return new Promise(function(resolve, reject){
-    let projectsCol = self.mongo.db('RefArch').collection('projects');
+    let projectsCol = self.mongo.collection('projects');
     projectsCol.remove({_id: id}, {justOne: true}, function(error, success) {
       if( error ) {
-        log.error('server error', err, ctx);
+        log.error('server error', error, self);
         reject(response);
       } else {
         resolve('ok');

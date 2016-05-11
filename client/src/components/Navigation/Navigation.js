@@ -16,7 +16,9 @@ import Link from '../Link';
 function Navigation({ className }) {
   return (
     <div className={cx(s.root, className)} role="navigation">
-      <a href="https://github.com/reference-arch" className={s.link}>Source Code</a>
+      <Link className={s.link} to="/about">About</Link>
+      <span className={s.spacer}> | </span>
+      <a href="https://github.com/reference-arch" className={s.link}>Code</a>
       <span className={s.spacer}> | </span>
       <Link className={s.link} to="/login">Log in</Link>
     </div>

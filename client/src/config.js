@@ -25,7 +25,7 @@ export const analytics = {
 
 export const auth = {
 
-  jwt: { secret: process.env.JWT_SECRET || 'Reference Architecture' },
+  jwt: { secret: process.env.JWT_SECRET || 'React Starter Kit' },
 
   // https://developers.facebook.com/
   facebook: {

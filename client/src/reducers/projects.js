@@ -5,7 +5,7 @@ export default function projects(state = {}, action) {
     case PROJECT_LIST:
       return {
         ...state,
-        [action.payload.name]: action.payload.url,
+        [action.payload.name]: action.payload.html_url,
       };
     case ADD_PROJECT:
       return Object.assign({}, state, {
@@ -14,7 +14,7 @@ export default function projects(state = {}, action) {
           {
             id: action.id,
             name: action.name,
-            url: action.url,
+            html_url: action.html_url,
             tags: action.tags,
             completed: false
           }
@@ -23,7 +23,7 @@ export default function projects(state = {}, action) {
     case REMOVE_PROJECT:
       return {
         ...state,
-        [action.payload.id]: action.payload.url,
+        [action.payload.id]: action.payload.html_url,
       };
     default:
       return state;
