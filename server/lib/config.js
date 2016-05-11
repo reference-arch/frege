@@ -24,7 +24,7 @@ if( !_.isUndefined(config.mongo.pass) && config.mongo.pass !== '' ) {
 
 var mongoUrl = null;
 var mongoHost = config.mongo.host;
-if( !_.contains(mongoHost, ':') && !_.isUndefined(config.mongo.port) && config.mongo.pass !== '' ) {
+if( !_.includes(mongoHost, ':') && !_.isUndefined(config.mongo.port) && config.mongo.pass !== '' ) {
   // only append an existing port if the hostname doesn't already contain one
   mongoHost = mongoHost + ':' + config.mongo.port;
 }
