@@ -13,8 +13,7 @@
 export const port = process.env.PORT || 3000;
 export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
-export const githubToken = process.env.GITHUB_TOKEN || 'xxx';
-export const backendUrl = process.env.BACKEND_URL || 'https://frege.herokuapp.com/projects';
+export const backendUrl = process.env.BACKEND_URL || 'https://frege.herokuapp.com';
 
 export const analytics = {
 

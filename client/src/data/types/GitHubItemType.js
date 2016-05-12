@@ -6,15 +6,15 @@ import {
   GraphQLNonNull as NonNull,
 } from 'graphql';
 
-const ProjectItemType = new ObjectType({
-  name: 'ProjectItem',
+const GitHubItemType = new ObjectType({
+  name: 'GitHubItem',
   fields: {
     id: { type: new NonNull(ID) },
-    github_id: { type: new NonNull(ID) },
     name: { type: new NonNull(StringType) },
     html_url: { type: new NonNull(StringType) },
     description: { type: StringType },
     tags: { type: new List(StringType) },
+    // publishedDate: { type: new NonNull(StringType) },
   },
 });
 

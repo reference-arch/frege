@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Home.scss';
@@ -23,7 +14,6 @@ function Home({ projects }, context) {
          <tbody>
           {projects.map((item, index) => (
             <tr key={index} className={s.projectItem}>
-              <td><input type="checkbox" /></td>
               <td>{item.id}</td>
               <td>
               <a href={item.html_url} className={s.projectTitle}>{item.name}</a>
@@ -35,7 +25,11 @@ function Home({ projects }, context) {
               />
               </td>
               <td>
-              {item.tags}
+              {(item.tags || []).map((tag, index) => (
+                <span>
+                  <a href={'/?tags='+tag}>{tag}</a>
+                , </span>
+              ))}
               </td>
             </tr>
           ))}

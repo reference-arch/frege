@@ -1,6 +1,6 @@
 import { PROJECT_LIST, ADD_PROJECT, REMOVE_PROJECT } from '../constants';
 
-export default function projects(state = {}, action) {
+export default function projects(state = {projects:[]}, action) {
   switch (action.type) {
     case PROJECT_LIST:
       return {
@@ -8,14 +8,15 @@ export default function projects(state = {}, action) {
         [action.payload.name]: action.payload.html_url,
       };
     case ADD_PROJECT:
-      return Object.assign({}, state, {
+      return Object.assign({projects:[]}, state, {
         projects: [
           ...state.projects,
           {
-            id: action.id,
-            name: action.name,
-            html_url: action.html_url,
-            tags: action.tags,
+            id: action.payload.id,
+            github_id: action.payload.id,
+            name: action.payload.name,
+            html_url: action.payload.html_url,
+            tags: action.payload.tags,
             completed: false
           }
         ]

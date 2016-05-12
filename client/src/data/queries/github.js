@@ -3,7 +3,7 @@ import fetch from '../../core/fetch';
 import ProjectItemType from '../types/ProjectItemType';
 import { backendUrl } from '../../config';
 
-const url = backendUrl + '/projects';
+const url = backendUrl + '/github';
 
 let items = [];
 let lastFetchTask;

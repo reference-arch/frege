@@ -1,12 +1,12 @@
 import React from 'react';
-import Content from './Content';
+import AddProjects from './AddProjects';
 import fetch from '../../core/fetch';
 
 export default {
 
-  path: '*',
+  path: '/add',
 
-  async action({ path }) { // eslint-disable-line react/prop-types
+  async action() {
     const resp = await fetch('/graphql', {
       method: 'post',
       headers: {
@@ -14,14 +14,12 @@ export default {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: `{content(path:"${path}"){path,title,content,component}}`,
+        query: '{github{id,name,html_url,description}}',
       }),
       credentials: 'include',
     });
-    if (resp.status !== 200) throw new Error(resp.statusText);
     const { data } = await resp.json();
-    if (!data || !data.content) return undefined;
-    return <Content {...data.content} />;
+    if (!data || !data.github) throw new Error('Failed to load the projects list.');
+    return <AddProjects github={data.github} />;
   },
-
 };
