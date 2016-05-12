@@ -4,8 +4,9 @@ const config      = require('./lib/config.js'),
 const _           = require('lodash'),
       co          = require('co'),
       request     = require('request'),
-      koa         = require('koa'),
       parse       = require('co-body'),
+      koa         = require('koa'),
+      cors        = require('koa-cors'),
       route       = require('koa-path')(),
       mongo       = require('koa-mongo');
 const app         = module.exports = koa(),
@@ -165,6 +166,7 @@ function getNewGitHubProjects(self) {
 
 
 app.use(mongo(config.mongoConnect));
+app.use(cors());
 
 // X-Response-Time
 app.use(function *(next){

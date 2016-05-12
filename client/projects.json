@@ -1,0 +1,17 @@
+[
+  {
+    "name":"aws-pipeline-samples",
+    "html_url":"https://github.com/reference-arch/aws-pipeline-samples",
+    "description":"This repository hosts sample pipelines",
+    "github_id":58104264,
+    "tags":["aws","pipeline"],
+    "id":3
+  },{
+    "name":"lambda-pipeline-sample",
+    "html_url":"https://github.com/reference-arch/lambda-pipeline-sample",
+    "description":"Template project and notes for building nodejs rest endpoints deployed on AWS Lambda and API",
+    "github_id":58105291,
+    "tags":["aws","pipeline","lambda","nodejs"],
+    "id":4
+  }
+]
