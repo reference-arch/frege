@@ -276,8 +276,17 @@ header h2.add a{
 .preview-large input {
     padding: 5px;
     border: 1px solid #ccc;
-    border-radius: 2px;
+    border-radius: 3px;
+    width: 80%;
 }
+.preview-large textarea {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 80%;
+    font-size: 110%;
+}
+
 .preview-large button,
 .projects-list button{
 	border-radius: 2px;
@@ -394,7 +403,7 @@ header h2.add a{
 
 .preview-large p{
 	line-height: 23px;
-	padding: 50px 45px;
+	padding: 30px 45px;
 }
 
 .close{

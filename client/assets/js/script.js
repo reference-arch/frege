@@ -208,7 +208,7 @@ $(function () {
 
 
   function regenerateAllProjectsHTML(data){
-    $('.all-projects .projects-list').remove('li');
+    $('.all-projects .projects-list li').remove();
     generateAllProjectsHTML(data);
   }
 
@@ -318,12 +318,11 @@ $(function () {
           container.find('h3').html("<a href='"+item.html_url+"'>"+item.name+"</a>");
           container.find('img').attr('src', 'http://image005.flaticon.com/25/svg/25/25231.svg');
           container.find('p').html(
-            "<div>" + item.description + "</div>" +
             "<form>" +
             "<input type=hidden name=github_id value='"+item.id+"'>"+
             "<input type=hidden name=name value='"+item.name+"'>"+
             "<input type=hidden name=html_url value='"+item.html_url+"'>"+
-            "<input type=hidden name=description value='"+item.description+"'>"+
+            "<textarea name=description>"+item.description+"</textarea>"+
             "<div><input name='tags' placeholder='tags'></div>" +
             "<button>Add As Reference</button>" +
             "</form>"
@@ -364,19 +363,13 @@ $(function () {
         }).done(function(respData) {
           console.log("done");
           projects.push(respData);
-          generateAllProjectsHTML(projects);
+          regenerateAllProjectsHTML(projects);
+          window.location.hash = '#';
           $(window).trigger('hashchange');
         }).fail( function(xhr, textStatus, errorThrown) {
           alert(xhr.responseText);
           alert(textStatus);
         });
-
-        // $.post('https://frege.herokuapp.com/projects', data, function(respData){
-        //   // TODO: check if error
-        //   projects.push(respData);
-        //   generateAllProjectsHTML(projects);
-        //   $(window).trigger('hashchange');
-        // });
       });
     }
 
@@ -396,9 +389,39 @@ $(function () {
 					// Populate '.preview-large' with the chosen project's data.
 					container.find('h3').html("<a href='"+item.html_url+"'>"+item.name+"</a>");
 					container.find('img').attr('src', 'http://image005.flaticon.com/25/svg/25/25231.svg');
-					container.find('p').text(item.description);
+          container.find('p').html(
+            item.description +
+            "<form>" +
+            "<input type=hidden name=id value='"+item.id+"'>"+
+            "<button>Remove As Reference</button>" +
+            "</form>"
+          );
 				}
 			});
+      $(container).find('button').one('click', function(event){
+        event.stopPropagation();
+        event.preventDefault();
+
+        var formValues = $(container).find('p form').serializeArray();
+        var id = formValues[0].value;
+
+        $.ajax({
+          type: "DELETE",
+          dataType: 'text',
+          url: 'https://frege.herokuapp.com/projects/'+id,
+          crossDomain: true,
+        }).done(function(respData) {
+          console.log(respData);
+          // TODO: remove from projects
+          // projects.push(respData);
+          // regenerateAllProjectsHTML(projects);
+          window.location.hash = '#';
+          $(window).trigger('hashchange');
+        }).fail( function(xhr, textStatus, errorThrown) {
+          alert(xhr.responseText);
+          alert(textStatus);
+        });
+      });
 		}
 
 		// Show the page.
