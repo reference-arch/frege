@@ -157,7 +157,8 @@ header h2.add a{
 
 /*	Projects List	*/
 
-.all-projects h3{
+.all-projects h3,
+.github-projects h3{
 	opacity: 0;
 }
 
@@ -171,9 +172,17 @@ header h2.add a{
 	font-size: 0;
 }
 
+.github-projects .projects-list {
+	margin-left: 0;
+}
+
 .all-projects.visible .projects-list,
 .all-projects.visible .filters,
-.all-projects.visible h3{
+.all-projects.visible h3,
+.github-projects.visible .projects-list,
+.github-projects.visible .filters,
+.github-projects.visible h3
+{
 	opacity: 1;
 	transition: 1s;
 	pointer-events: auto;
@@ -264,6 +273,12 @@ header h2.add a{
 
 /* Price and order button */
 
+.preview-large input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+.preview-large button,
 .projects-list button{
 	border-radius: 2px;
 	background-color:  #87bae1;
@@ -273,7 +288,6 @@ header h2.add a{
 	font-weight: bold;
 	font-size: 13px;
 	cursor: pointer;
-
 	width: 95px;
 	height: 32px;
 }

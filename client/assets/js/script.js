@@ -2,7 +2,8 @@ $(function () {
 
 	// Globals variables
 
-		// 	An array containing objects with information about the projects.
+	// 	An array containing objects with information about the projects.
+	var githubProjects = [];
 	var projects = [],
 
 		// Our filters object will contain an array of values for each filter
@@ -38,7 +39,7 @@ $(function () {
 			filters[specName].push(that.val());
 
 			// Change the url hash;
-			createQueryHash(filters);
+			createQueryHash(filters, '#');
 
 		}
 
@@ -58,11 +59,10 @@ $(function () {
 				if(!filters[specName].length){
 					delete filters[specName];
 				}
-
 			}
 
 			// Change the url hash;
-			createQueryHash(filters);
+			createQueryHash(filters, '#');
 		}
 	});
 
@@ -85,8 +85,14 @@ $(function () {
 
 			// If the close button or the background are clicked go to the previous page.
 			if (clicked.hasClass('close') || clicked.hasClass('overlay')) {
+        var base = window.location.hash.split('/')[0].trim();
+        var redirectDefault = '#';
+        if( base == '#create' ) {
+          redirectDefault = '#add';
+          filters = {};
+        }
 				// Change the url hash with the last used filters.
-				createQueryHash(filters);
+				createQueryHash(filters, redirectDefault);
 			}
 
 		}
@@ -98,20 +104,27 @@ $(function () {
 
 	// Get data about our projects from projects.json.
 	$.getJSON( "https://frege.herokuapp.com/projects", function( data ) {
-
 		// Write the data into our global variable.
 		projects = data;
-
 		// Call a function to create HTML for all the projects.
 		generateAllProjectsHTML(projects);
+		// Manually trigger a hashchange to start the app.
+		$(window).trigger('hashchange');
+	});
 
+	// Get data about our projects from projects.json.
+	$.getJSON( "https://frege.herokuapp.com/github", function( data ) {
+		// Write the data into our global variable.
+		githubProjects = data;
+		// Call a function to create HTML for all the projects.
+		generateGitHubProjectsHTML(githubProjects);
 		// Manually trigger a hashchange to start the app.
 		$(window).trigger('hashchange');
 	});
 
 
 	// An event handler with calls the render function on every hashchange.
-	// The render function will show the appropriate content of out page.
+	// The render function will show the appropriate content of our page.
 	$(window).on('hashchange', function(){
 		render(decodeURI(window.location.hash));
 	});
@@ -134,18 +147,29 @@ $(function () {
 				// Clear the filters object, uncheck all checkboxes, show all the projects
 				filters = {};
 				checkboxes.prop('checked',false);
+        $('.all-projects').removeAttr('style');
 				renderProjectsPage(projects);
+        $('.github-projects').slideUp();
 			},
 
 			// Add a new project page.
 			'#add': function() {
-				// Get the index of which project we want to show and call the appropriate function.
-				var index = url.split('#add/')[1].trim();
-				renderSingleProjectPage(index, projects);
+				renderGitHubProjectsPage(githubProjects);
+        $('.github-projects').slideDown();
+        $('.all-projects').hide();
 			},
+
+      // Single Projects page.
+      '#create': function() {
+        $('.all-projects').removeAttr('style');
+        // Get the index of which project we want to show and call the appropriate function.
+        var index = url.split('#create/')[1].trim();
+        renderCreateProjectPage(index, githubProjects);
+      },
 
 			// Single Projects page.
 			'#project': function() {
+        $('.all-projects').removeAttr('style');
 				// Get the index of which project we want to show and call the appropriate function.
 				var index = url.split('#project/')[1].trim();
 				renderSingleProjectPage(index, projects);
@@ -153,6 +177,8 @@ $(function () {
 
 			// Page with filtered projects
 			'#filter': function() {
+        $('.all-projects').removeAttr('style');
+        $('.github-projects').slideUp();
 				// Grab the string after the '#filter/' keyword. Call the filtering function.
 				url = url.split('#filter/')[1].trim();
 				// Try and parse the filters object from the query string.
@@ -181,30 +207,51 @@ $(function () {
 	}
 
 
-	// This function is called only once - on page load.
-	// It fills up the projects list via a handlebars template.
-	// It recieves one parameter - the data we took from projects.json.
+  function regenerateAllProjectsHTML(data){
+    $('.all-projects .projects-list').remove('li');
+    generateAllProjectsHTML(data);
+  }
+
+  // This function is called only once - on page load.
+  // It fills up the projects list via a handlebars template.
+  // It recieves one parameter - the data we took from projects json.
 	function generateAllProjectsHTML(data){
 
 		var list = $('.all-projects .projects-list');
 
 		var theTemplateScript = $("#projects-template").html();
 		//Compile the template​
-		var theTemplate = Handlebars.compile (theTemplateScript);
-		list.append (theTemplate(data));
-
+		var theTemplate = Handlebars.compile(theTemplateScript);
+		list.append(theTemplate(data));
 
 		// Each projects has a data-index attribute.
 		// On click change the url hash to open up a preview for this project only.
 		// Remember: every hashchange triggers the render function.
 		list.find('li').on('click', function (e) {
 			e.preventDefault();
-
 			var projectIndex = $(this).data('index');
-
 			window.location.hash = 'project/' + projectIndex;
 		})
 	}
+
+  function generateGitHubProjectsHTML(data){
+    $('.github-projects').hide();
+    var list = $('.github-projects .projects-list');
+
+    var theTemplateScript = $("#github-projects-template").html();
+    //Compile the template​
+    var theTemplate = Handlebars.compile(theTemplateScript);
+    list.append(theTemplate(data));
+
+    // Each projects has a data-index attribute.
+    // On click change the url hash to open up a preview for this project only.
+    // Remember: every hashchange triggers the render function.
+    list.find('li').on('click', function (e) {
+      e.preventDefault();
+      var projectIndex = $(this).data('index');
+      window.location.hash = 'create/' + projectIndex;
+    })
+  }
 
 	// This function receives an object containing all the project we want to show.
 	function renderProjectsPage(data){
@@ -218,9 +265,7 @@ $(function () {
 		// Iterate over all of the projects.
 		// If their ID is somewhere in the data object remove the hidden class to reveal them.
 		allProjects.each(function () {
-
 			var that = $(this);
-
 			data.forEach(function (item) {
 				if(that.data('index') == item.id){
 					that.removeClass('hidden');
@@ -231,14 +276,116 @@ $(function () {
 		// Show the page itself.
 		// (the render function hides all pages so we need to show the one we want).
 		page.addClass('visible');
-
 	}
 
+  // This function receives an object containing all the project we want to show.
+  function renderGitHubProjectsPage(data){
+    $('.github-projects').show();
+
+    var page = $('.github-projects'),
+      allGithubProjects = $('.github-projects .projects-list > li');
+
+    // Hide all the projects in the projects list.
+    allGithubProjects.addClass('hidden');
+
+    // Iterate over all of the projects.
+    // If their ID is somewhere in the data object remove the hidden class to reveal them.
+    allGithubProjects.each(function () {
+      var that = $(this);
+      data.forEach(function (item) {
+        // if(that.data('index') == item.id){
+          that.removeClass('hidden');
+        // }
+      });
+    });
+
+    // $('.all-projects').addClass('hidden');
+
+    // Show the page itself.
+    // (the render function hides all pages so we need to show the one we want).
+    page.addClass('visible');
+  }
+
+  function renderCreateProjectPage(index, data){
+    var page = $('.single-project'),
+      container = $('.preview-large');
+
+    // Find the wanted project by iterating the data object and searching for the chosen index.
+    if(data.length){
+      data.forEach(function (item) {
+        if(item.id == index){
+          // Populate '.preview-large' with the chosen project's data.
+          container.find('h3').html("<a href='"+item.html_url+"'>"+item.name+"</a>");
+          container.find('img').attr('src', 'http://image005.flaticon.com/25/svg/25/25231.svg');
+          container.find('p').html(
+            "<div>" + item.description + "</div>" +
+            "<form>" +
+            "<input type=hidden name=github_id value='"+item.id+"'>"+
+            "<input type=hidden name=name value='"+item.name+"'>"+
+            "<input type=hidden name=html_url value='"+item.html_url+"'>"+
+            "<input type=hidden name=description value='"+item.description+"'>"+
+            "<div><input name='tags' placeholder='tags'></div>" +
+            "<button>Add As Reference</button>" +
+            "</form>"
+          );
+        }
+      });
+      $('.preview-large button').one('click', function(event){
+        event.stopPropagation();
+        event.preventDefault();
+
+        var formValues = $(container).find('p form').serializeArray();
+        var data = {};
+        $.each(formValues, function(i, val){
+          data[val.name] = val.value;
+        });
+        if( data['tags'] ) {
+          var tags = data['tags'].split(',');
+          data['tags'] = tags;
+          console.log(tags);
+        } else {
+          data['tags'] = [];
+        }
+
+        console.log('sending data');
+        console.dir(data);
+
+        $.ajax({
+          type: "POST",
+          dataType: 'json',
+          data: JSON.stringify(data),
+          url: 'https://frege.herokuapp.com/projects',
+          // username: 'user',
+          // password: 'pass',
+          crossDomain: true,
+          // xhrFields: {
+          //   withCredentials: true
+          // }
+        }).done(function(respData) {
+          console.log("done");
+          projects.push(respData);
+          generateAllProjectsHTML(projects);
+          $(window).trigger('hashchange');
+        }).fail( function(xhr, textStatus, errorThrown) {
+          alert(xhr.responseText);
+          alert(textStatus);
+        });
+
+        // $.post('https://frege.herokuapp.com/projects', data, function(respData){
+        //   // TODO: check if error
+        //   projects.push(respData);
+        //   generateAllProjectsHTML(projects);
+        //   $(window).trigger('hashchange');
+        // });
+      });
+    }
+
+    // Show the page.
+    page.addClass('visible');  };
 
 	// Opens up a preview for one of the projects.
 	// Its parameters are an index from the hash and the projects object.
 	function renderSingleProjectPage(index, data){
-
 		var page = $('.single-project'),
 			container = $('.preview-large');
 
@@ -247,7 +394,7 @@ $(function () {
 			data.forEach(function (item) {
 				if(item.id == index){
 					// Populate '.preview-large' with the chosen project's data.
-					container.find('h3').text(item.name);
+					container.find('h3').html("<a href='"+item.html_url+"'>"+item.name+"</a>");
 					container.find('img').attr('src', 'http://image005.flaticon.com/25/svg/25/25231.svg');
 					container.find('p').text(item.description);
 				}
@@ -256,7 +403,6 @@ $(function () {
 
 		// Show the page.
 		page.addClass('visible');
-
 	}
 
 	// Find and render the filtered data results. Arguments are:
@@ -279,7 +425,6 @@ $(function () {
 			// Check if each of the possible filter criteria is actually in the filters object.
 			if(filters[c] && filters[c].length){
 
-
 				// After we've filtered the projects once, we want to keep filtering them.
 				// That's why we make the object we search in (projects) to equal the one with the results.
 				// Then the results array is cleared, so it can be filled with the newly filtered data.
@@ -293,32 +438,36 @@ $(function () {
 				// and check if they contain the same values (the ones we are filtering by).
 
 				// Iterate over the entries inside filters.criteria (remember each criteria contains an array).
-				filters[c].forEach(function (filter) {
-					console.log("filter " + filter);
+				// console.log(filters[c]);
+				// filters[c].forEach(function (filter) {
+				// 	console.log("filter " + filter);
+				var selected = filters[c];
 
-					// Iterate over the projects.
-					projects.forEach(function (item){
+				// Iterate over the projects.
+				projects.forEach(function (item){
 
-						// If the project has the same specification value as the one in the filter
-						// push it inside the results array and mark the isFiltered flag true.
+					// If the project has the same specification value as the one in the filter
+					// push it inside the results array and mark the isFiltered flag true.
 
-						if(typeof item.tags !== 'undefined' && item.tags !== null){
-							console.log(item.tags);
-							console.log($.inArray(filter, item.tags));
-							if( $.inArray(filter, item.tags) !== -1 ) {
-								results.push(item);
-								isFiltered = true;
-							}
+					if(typeof item.tags !== 'undefined' && item.tags !== null){
+						console.log(item.tags);
+						var intersected = $.map(selected, function(a){return $.inArray(a, item.tags) < 0 ? null : a;})
+						console.log('inter ' + intersected);
+						var match = $(selected).not(intersected).length === 0 && $(intersected).not(selected).length === 0
+						console.log(match);
+						if( match ) {
+							results.push(item);
+							isFiltered = true;
 						}
-					});
+					}
+				});
 
-					// Here we can make the checkboxes representing the filters true,
-					// keeping the app up to date.
+				// Here we can make the checkboxes representing the filters true,
+				// keeping the app up to date.
+				filters[c].forEach(function (filter) {
 					if(c && filter){
 						$('input[name='+c+'][value='+filter+']').prop('checked',true);
 					}
-
-					console.log(results);
 				});
 			}
 
@@ -337,7 +486,7 @@ $(function () {
 	}
 
 	// Get the filters object, turn it into a string and write it into the hash.
-	function createQueryHash(filters){
+	function createQueryHash(filters, redirectDefault){
 
 		// Here we check if filters isn't empty.
 		if(!$.isEmptyObject(filters)){
@@ -346,7 +495,7 @@ $(function () {
 		}
 		else{
 			// If it's empty change the hash to '#' (the homepage).
-			window.location.hash = '#';
+			window.location.hash = redirectDefault;
 		}
 
 	}
