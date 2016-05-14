@@ -92,6 +92,10 @@ function deleteProject(self, id) {
   });
 }
 
+function getProject(self, id) {
+  return listProjects(self, {_id: id});
+}
+
 function listProjects(self, query) {
   return new Promise(function(resolve, reject){
     if( !query ) { query = {}; }
@@ -248,6 +252,13 @@ app.use(route('/projects/:id', function*() {
   this.type = 'application/json';
   let id = parseInt(this.params.id);
   switch( this.method ) {
+  case 'GET':
+    let projects = yield getProject(this, id);
+    if( projects.length ) {
+      let project = projects[0];
+      return this.body = project;
+    }
+    this.throw(404, 'Not Found');
   case 'DELETE':
     return this.body = yield deleteProject(this, id);
   default:

@@ -147,29 +147,29 @@ $(function () {
 				// Clear the filters object, uncheck all checkboxes, show all the projects
 				filters = {};
 				checkboxes.prop('checked',false);
-        $('.all-projects').removeAttr('style');
+				$('.all-projects').removeAttr('style');
 				renderProjectsPage(projects);
-        $('.github-projects').slideUp();
+				$('.github-projects').hide();
 			},
 
 			// Add a new project page.
 			'#add': function() {
 				renderGitHubProjectsPage(githubProjects);
-        $('.github-projects').slideDown();
-        $('.all-projects').hide();
+				$('.github-projects').show();
+				$('.all-projects').hide();
 			},
 
-      // Single Projects page.
-      '#create': function() {
-        $('.all-projects').removeAttr('style');
-        // Get the index of which project we want to show and call the appropriate function.
-        var index = url.split('#create/')[1].trim();
-        renderCreateProjectPage(index, githubProjects);
-      },
+			// Single Projects page.
+			'#create': function() {
+				$('.all-projects').removeAttr('style');
+				// Get the index of which project we want to show and call the appropriate function.
+				var index = url.split('#create/')[1].trim();
+				renderCreateProjectPage(index, githubProjects);
+			},
 
 			// Single Projects page.
 			'#project': function() {
-        $('.all-projects').removeAttr('style');
+			$('.all-projects').removeAttr('style');
 				// Get the index of which project we want to show and call the appropriate function.
 				var index = url.split('#project/')[1].trim();
 				renderSingleProjectPage(index, projects);
@@ -177,8 +177,8 @@ $(function () {
 
 			// Page with filtered projects
 			'#filter': function() {
-        $('.all-projects').removeAttr('style');
-        $('.github-projects').slideUp();
+				$('.all-projects').removeAttr('style');
+				$('.github-projects').slideUp();
 				// Grab the string after the '#filter/' keyword. Call the filtering function.
 				url = url.split('#filter/')[1].trim();
 				// Try and parse the filters object from the query string.
@@ -259,19 +259,26 @@ $(function () {
 		var page = $('.all-projects'),
 			allProjects = $('.all-projects .projects-list > li');
 
+		$('.all-projects .projects-list li.none').remove();
+
 		// Hide all the projects in the projects list.
 		allProjects.addClass('hidden');
 
 		// Iterate over all of the projects.
 		// If their ID is somewhere in the data object remove the hidden class to reveal them.
+		var anyMatches = false;
 		allProjects.each(function () {
 			var that = $(this);
 			data.forEach(function (item) {
 				if(that.data('index') == item.id){
 					that.removeClass('hidden');
+					anyMatches = true;
 				}
 			});
 		});
+		if( !anyMatches ) {
+			$('.all-projects .projects-list').append('<li class=none>No matches found</li>')
+		}
 
 		// Show the page itself.
 		// (the render function hides all pages so we need to show the one we want).
@@ -455,7 +462,6 @@ $(function () {
 					projects = results;
 					results = [];
 				}
-
 
 				// In these nested 'for loops' we will iterate over the filters and the projects
 				// and check if they contain the same values (the ones we are filtering by).

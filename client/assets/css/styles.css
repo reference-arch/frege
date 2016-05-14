@@ -4,11 +4,11 @@
 }
 
 body{
-	font: normal 16px Arial, Helvetica, sans-serif;
+	font: normal 16px 'Roboto', Helvetica, sans-serif;
 }
 
 h1, h3{
-	font: normal 24px 'Open Sans', Arial, Helvetica, sans-serif;
+	font: normal 36px 'Raleway', Arial, Helvetica, sans-serif;
 }
 
 /*-----------------
@@ -122,7 +122,7 @@ header h2.add a{
 }
 
 .filters span{
-	font-size:14px;
+	font-size:18px;
 	display: block;
 	margin-bottom: 12px;
 	font-weight: bold;
@@ -166,7 +166,7 @@ header h2.add a{
 	list-style:none;
 	margin-left:225px;
 	max-width: 1500px;
-	text-align: center;
+	text-align: left;
 	padding: 0;
 	opacity: 0;
 	font-size: 0;
@@ -208,7 +208,8 @@ header h2.add a{
 }
 
 .projects-list > li.hidden{
-	opacity: 0.2;
+	/*opacity: 0.2;*/
+	display: none;
 	pointer-events: none;
 }
 
@@ -233,7 +234,7 @@ header h2.add a{
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow:ellipsis;
-	max-width: 200px;
+	max-width: 225px;
 	margin:0;
 }
 
@@ -301,7 +302,7 @@ header h2.add a{
 	height: 32px;
 }
 
-.projects-list .project-price{
+.projects-list .project-id{
 	float: right;
 
 	color:  #4e4e4e;
