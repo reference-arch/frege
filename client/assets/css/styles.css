@@ -141,7 +141,7 @@ header h2.add a{
 
 .filters button{
 	border-radius: 2px;
-	background-color:  #4BC34B;
+	background-color: #689f38;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
 	border: 0;
 	color: #ffffff;
@@ -246,28 +246,48 @@ header h2.add a{
 /* Project description */
 
 .projects-list .project-description{
-	margin-top: 20px;
+	margin-top: 16px;
 
 	color: #5d5d5d;
 	font-size: 14px;
-	line-height: 1.45;
+	/*line-height: 1.45;*/
 	white-space: normal;
 
-	max-width: 260px;
+	max-width: 270px;
 	margin-bottom: 20px;
 
 	list-style: none;
+	height: 40px;
 }
 
 .projects-list .project-description li{
 	display: inline-block;
-	margin-right: 5px;
+	margin-bottom: 2px;
+	margin-right: 1px;
+	padding:2px;
+	padding-top:1px;
+	padding-bottom:1px;
+	border:1px solid #689f38;
+	background-color:#eff5eb;
+	border-radius: 3px;
+}
+.projects-list .project-description li a {
+	color:#689f38;
+	text-decoration:none;
+}
+.projects-list .project-description li:hover {
+	border:1px solid #436624;
+	background-color:#a4c587;
+}
+.projects-list .project-description li:hover a{
+	color:#436624;
 }
 
+/*
 .projects-list .project-description li:first-child{
 	display: block;
 }
-
+*/
 .projects-list .project-description li span{
 	font-weight: bold;
 }
@@ -303,16 +323,20 @@ header h2.add a{
 }
 
 .projects-list .project-id{
+	font-family: 'Roboto';
 	float: right;
-
 	color:  #4e4e4e;
-	font-weight: bold;
-	font-size: 20px;
-
-	padding-top: 6px;
+	font-size: 28px;
 	margin: 0;
 }
-
+.projects-list .project-id a{
+	color:#689f38;
+	text-decoration:none;
+}
+.projects-list .project-id a:hover{
+	border-bottom:1px solid #689f38;
+}
+/*
 .projects-list .highlight{
 	position: absolute;
 	top:0;
@@ -326,6 +350,22 @@ header h2.add a{
 
 .projects-list > li:hover .highlight{
 	opacity: 1;
+}
+*/
+.projects-list > li:hover {
+    background-color: rgba(0,0,0,0.1);
+    opacity: 1;
+    transition: 0.4s;
+}
+
+.projects-list > li:hover button {
+    background-color: #4a97d2;
+    transition: 0.4s;
+}
+
+.preview-large button:hover {
+    background-color: #4a97d2;
+    transition: 0.4s;
 }
 
 /* Making the list responsive */

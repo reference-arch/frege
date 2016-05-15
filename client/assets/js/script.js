@@ -227,9 +227,9 @@ $(function () {
 		// Each projects has a data-index attribute.
 		// On click change the url hash to open up a preview for this project only.
 		// Remember: every hashchange triggers the render function.
-		list.find('li').on('click', function (e) {
+		list.find('li button').on('click', function (e) {
 			e.preventDefault();
-			var projectIndex = $(this).data('index');
+			var projectIndex = $(this).parent('li').data('index');
 			window.location.hash = 'project/' + projectIndex;
 		})
 	}
@@ -479,11 +479,11 @@ $(function () {
 					// push it inside the results array and mark the isFiltered flag true.
 
 					if(typeof item.tags !== 'undefined' && item.tags !== null){
-						console.log(item.tags);
+						// console.log(item.tags);
 						var intersected = $.map(selected, function(a){return $.inArray(a, item.tags) < 0 ? null : a;})
-						console.log('inter ' + intersected);
+						// console.log('inter ' + intersected);
 						var match = $(selected).not(intersected).length === 0 && $(intersected).not(selected).length === 0
-						console.log(match);
+						// console.log(match);
 						if( match ) {
 							results.push(item);
 							isFiltered = true;
