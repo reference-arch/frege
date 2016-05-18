@@ -68,7 +68,14 @@
 				<script id="projects-template" type="x-handlebars-template">​
 					{{#each this}}
 						<li data-index="{{id}}">
-							<a href="#" class="project-photo"><img src="http://image005.flaticon.com/25/svg/25/25231.svg" height="130" alt="{{name}}"/></a>
+							<a href="{{html_url}}" class="project-photo"><img src="http://image005.flaticon.com/25/svg/25/25231.svg" height="130" alt="{{name}}"/></a>
+
+							<ul class="shield-list">
+						    {{#each shields}}
+							<li><img src="{{image}}" /></li>
+							{{/each}}
+							</ul>
+
 							<h2><a href="#"> {{name}} </a></h2>
 							<ul class="project-description">
 							    {{#each tags}}

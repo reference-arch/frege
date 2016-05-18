@@ -30,7 +30,22 @@ function saveProject(self) {
       try {
         data = yield parse.json(self, {});
       } catch( err ) {
-        log.error('Error generating report', err);
+        log.error('Error parsing body', err);
+        reject(new Error(JSON.stringify({"status":"error", "cause":"Malformed JSON", "message": err})));
+        return;
+      }
+      let shields = {};
+      try {
+        let full_name = data['github_full_name'];
+        if( full_name ) {
+          let response = yield getGitHubShields(self, full_name);
+          if( shields != 404 ) { // ugh, hack
+            shields = response;
+          }
+        }
+        console.dir(shields);
+      } catch( err ) {
+        log.error('Error extracting shields', err);
         reject(new Error(JSON.stringify({"status":"error", "cause":"Malformed JSON", "message": err})));
         return;
       }
@@ -49,17 +64,14 @@ function saveProject(self) {
           html_url: data['html_url'],
           description: data['description'],
           github_id: parseInt(data['github_id']),
+          github_full_name: data['github_full_name'],
           tags: data['tags']
         }
+        if( shields['shields'] ) {
+          project['shields'] = shields['shields'];
+        }
         let projectsCol = self.mongo.collection('projects');
-
-        // self.mongo.collection('counters').findAndModify(
-        //   { github_id: project.github_id },
-        //   [],
-        //   project,
         //   { upsert: true },
-        //   function(error, success) {
-        //  console.dir(success);
         projectsCol.save(project, {}, function(error, success) {
           if( error ) {
             log.error('server error', err, ctx);
@@ -71,7 +83,7 @@ function saveProject(self) {
           }
         });
       } catch( err ) {
-        log.error('Error generating report', err);
+        log.error('Error saving project', err);
         reject(new Error(JSON.stringify({"status":"error", "message": err})));
       }
     });
@@ -118,6 +130,41 @@ function listProjects(self, query) {
       }
       resolve(projects);
     });
+  });
+}
+
+function getGitHubShields(self, full_name) {
+  let url = "https://raw.githubusercontent.com/"+full_name+"/master/README.md";
+  return new Promise(function(resolve, reject){
+    let options = {
+      url: url,
+      headers: {
+        'User-Agent': 'frege'
+      }
+    }
+    request.get(options, function(error, response, body){
+      if( error ) {
+        log.error('github', error);
+        return reject(new Error(JSON.stringify({"status":"error", "message": error})));
+      }
+      if( response.statusCode == 200 ) {
+        // HACKITY HACK
+        var badge1 = body.match(/\((https?:\/\/circleci\.com.+?)\)/);
+        var badge2 = body.match(/\((https?:\/\/coveralls\.io.+?)\)/);
+        var badge3 = body.match(/\((https?:\/\/codeclimate\.com.+?)\)/);
+        var badges = [];
+        if( badge1 && badge1[1] && badge1[1].length < 150 ) { badges.push({image: badge1[1]}); }
+        if( badge2 && badge2[1] && badge2[1].length < 150 ) { badges.push({image: badge2[1]}); }
+        if( badge3 && badge3[1] && badge3[1].length < 150 ) { badges.push({image: badge3[1]}); }
+        resolve({shields: badges});
+      } else if( response.statusCode == 404 ) {
+        resolve(404);
+      } else {
+        let message = 'Unexpected status code from GitHub ' + response.statusCode;
+        log.error(message);
+        reject(new Error(JSON.stringify({"status":"error", "message": message})));
+      }
+    })
   });
 }
 
@@ -205,6 +252,24 @@ app.use(route('/ping', function*() {
   let uptime = process.uptime();
   this.body = JSON.stringify({"status": "pong", "uptimeSeconds": uptime});
 }));
+
+// Get a list of projects, or create a new one
+app.use(route('/github/:org/:repo', function*() {
+  this.type = 'application/json';
+  switch( this.method ) {
+  case 'GET':
+    let org = this.params.org;
+    let repo = this.params.repo;
+    let response = yield getGitHubShields(this, org+'/'+repo);
+    if( response == 404 ) {
+      return this.throw(404, 'Not Found');
+    }
+    return this.body = response;
+  default:
+    return this.throw(400, 'Invalid method ' + this.method);
+  }
+}));
+
 
 // Get a list of projects, or create a new one
 app.use(route('/github', function*() {

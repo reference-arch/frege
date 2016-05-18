@@ -326,6 +326,7 @@ $(function () {
           container.find('img').attr('src', 'http://image005.flaticon.com/25/svg/25/25231.svg');
           container.find('p').html(
             "<form>" +
+            "<input type=hidden name=github_full_name value='"+item.full_name+"'>"+
             "<input type=hidden name=github_id value='"+item.id+"'>"+
             "<input type=hidden name=name value='"+item.name+"'>"+
             "<input type=hidden name=html_url value='"+item.html_url+"'>"+

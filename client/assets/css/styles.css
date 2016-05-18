@@ -245,6 +245,14 @@ header h2.add a{
 
 /* Project description */
 
+.projects-list .shield-list {
+    position: absolute;
+    top: 36px;
+    left: 32px;
+	list-style: none;
+	margin:0;
+}
+
 .projects-list .project-description{
 	margin-top: 16px;
 
